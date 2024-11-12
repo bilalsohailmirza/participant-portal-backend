@@ -1,0 +1,16 @@
+home
+/featured-societies (Get)
+/featured-events (Get)
+
+society
+/featured-members (Get)
+/events-by-societies (Get)
+/competitions-by-societies (Get)
+
+competition
+/competition-details (Get)
+/form
+
+events
+/events-details (Get)
+/form
