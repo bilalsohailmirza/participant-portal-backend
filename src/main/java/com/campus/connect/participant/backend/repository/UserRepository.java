@@ -70,4 +70,12 @@ public class UserRepository {
         String sql = "DELETE FROM \"user\" WHERE id = ?";
         return jdbcTemplate.update(sql, id);
     }
+
+    // find by email
+    public Optional<User> findByEmail(String email) {
+        String sql = "SELECT * FROM \"user\" WHERE email = ?";
+        List<User> users = jdbcTemplate.query(sql, rowMapper, email);
+        System.out.println(users);
+        return users.stream().findFirst();
+    }
 }
