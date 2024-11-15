@@ -3,16 +3,26 @@ package com.campus.connect.participant.backend.controller;
 import com.campus.connect.participant.backend.model.User;
 import com.campus.connect.participant.backend.repository.UserRepository;
 import com.campus.connect.participant.backend.payload.request.SignupRequest;
+import com.campus.connect.participant.backend.payload.request.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.*;   
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import com.campus.connect.participant.backend.security.services.CustomUserDetails;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import com.campus.connect.participant.backend.security.jwt.JwtUtils;
+import com.campus.connect.participant.backend.payload.response.JwtResponse;
 
 
 
@@ -21,7 +31,17 @@ import java.util.UUID;
 public class UserController {
 
     @Autowired
+    JwtUtils jwtUtils;
+
+    @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    PasswordEncoder encoder;
+
 
     // Create a new user
     @PostMapping
@@ -110,6 +130,39 @@ public class UserController {
         );
         }
 
+    }
+    
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+
+        Optional<User> user = userRepository.findByEmail(loginRequest.getEmail());
+        
+        if(user.isPresent())
+        {
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
+            );
+            
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+                String jwt = jwtUtils.generateJwtToken(authentication);
+    
+                CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();    
+                List<String> roles = userDetails.getAuthorities().stream()
+                    .map(item -> item.getAuthority())
+                    .collect(Collectors.toList());
+
+                return ResponseEntity.ok(new JwtResponse(jwt, 
+                                    userDetails.getUsername(),
+                                    roles));
+            }
+        else
+        {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                Map.of(
+                    "message", "Email does not exist"
+                )
+            );
+        }
     }
     
 
