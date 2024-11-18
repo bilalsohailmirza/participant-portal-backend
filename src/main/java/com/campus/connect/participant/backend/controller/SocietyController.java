@@ -24,5 +24,10 @@ public class SocietyController {
     public List<Society> getFeaturedSocieties() {
         return societyRepository.getAllFeaturedSocieties();
     }
+
+    @GetMapping("/get-society-by-id")
+    public Society getSocietyById(@RequestParam UUID societyId){
+        return societyRepository.getSocietyById(societyId);
+    }
     
 }

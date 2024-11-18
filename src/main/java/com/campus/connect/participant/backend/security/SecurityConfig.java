@@ -54,6 +54,8 @@ public class SecurityConfig {
             .authorizeHttpRequests( auth -> 
             auth.requestMatchers("api/users/signup").permitAll()
             .requestMatchers("api/users/login").permitAll()
+            .requestMatchers("/api/societies/get-featured-societies").permitAll()
+            .requestMatchers("/api/societies/get-society-by-id").permitAll()
             .anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());

@@ -35,4 +35,9 @@ public class SocietyRepository {
         String sql = "SELECT * FROM \"society\"";
         return jdbcTemplate.query(sql, rowMapper);
     }
+
+    public Society getSocietyById(UUID id){
+        String sql = "SELECT * FROM \"society\" WHERE id = ? ";
+        return jdbcTemplate.query(sql,rowMapper,id).getFirst();
+    }
 }
