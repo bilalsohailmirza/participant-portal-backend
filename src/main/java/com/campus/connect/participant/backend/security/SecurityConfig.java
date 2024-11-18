@@ -56,6 +56,7 @@ public class SecurityConfig {
             .requestMatchers("api/users/login").permitAll()
             .requestMatchers("/api/societies/get-featured-societies").permitAll()
             .requestMatchers("/api/societies/get-society-by-id").permitAll()
+            .requestMatchers("/api/events/featured-events").permitAll() 
             .anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());
