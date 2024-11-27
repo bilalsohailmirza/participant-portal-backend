@@ -57,7 +57,8 @@ public class SecurityConfig {
             .requestMatchers("/api/societies/get-featured-societies").permitAll()
             .requestMatchers("/api/societies/get-society-by-id").permitAll()
             .requestMatchers("/api/events/featured-events").permitAll() 
-            .requestMatchers("/api/events/getEventBySocietyId").permitAll() 
+            .requestMatchers("/api/events/getEventBySocietyId").permitAll()
+            .requestMatchers("/api/competition/getCompetitionBySocietyId").permitAll()
             .anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider());
