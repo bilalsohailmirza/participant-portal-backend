@@ -37,5 +37,12 @@ public class EventRepository {
         return jdbcTemplate.query(sql, new EventRowMapper());
     }
 
+    public List<Event> findEventsBySocietyId(UUID societyId) {
+         
+        String sql = "SELECT e.* FROM event e join \"Activities\" a on e.activity_id = a.id where a.society_id = ? "; // Using '?' to safely bind the societyId parameter
+        
+        // Execute the query with the societyId parameter and return the list of events
+        return jdbcTemplate.query(sql, new EventRowMapper(),societyId);
+    }
 
 }
