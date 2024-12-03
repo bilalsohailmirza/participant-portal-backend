@@ -1,6 +1,7 @@
 package com.campus.connect.participant.backend.controller;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,15 @@ public class CompetitionController {
 
     
      @GetMapping("/getCompetitionBySocietyId")
-    public List<Competition> getCompetitionsBySociety(@RequestParam UUID societyId) {
+    public List<Map<String, Object>> getCompetitionsBySociety(@RequestParam UUID societyId) {
         return competitionRepository.findCompetitionsBySocietyId(societyId);
     }
+
+    @GetMapping("/getDetails")
+    public Competition getDetails(@RequestParam UUID id) {
+
+        return competitionRepository.getDetails(id);
+        
+    }
+    
 }

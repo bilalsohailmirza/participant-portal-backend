@@ -59,9 +59,11 @@ public class SecurityConfig {
             .requestMatchers("/api/events/featured-events").permitAll() 
             .requestMatchers("/api/events/getEventBySocietyId").permitAll()
             .requestMatchers("/api/competition/getCompetitionBySocietyId").permitAll()
+            .requestMatchers("/api/competition/getDetails").permitAll()
+            .requestMatchers("/api/events/getDetails").permitAll()
             .anyRequest().authenticated());
 
-        http.authenticationProvider(authenticationProvider());
+        http.authenticationProvider(authenticationProvider()); 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
             
         return http.build();

@@ -8,9 +8,11 @@ society
 /competitions-by-societies (Get)
 
 competition
-/competition-details (Get)
+/competition-details (Get) have to return a join of activity and competition
 /form
 
 events
 /events-details (Get)
 /form
+
+need to add activity id in participant table as well

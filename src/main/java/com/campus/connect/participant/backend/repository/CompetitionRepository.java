@@ -3,6 +3,7 @@ package com.campus.connect.participant.backend.repository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,17 @@ public class CompetitionRepository {
     }
 }
 
-    public List<Competition> findCompetitionsBySocietyId(UUID societyId) {
+    public List<Map<String, Object>> findCompetitionsBySocietyId(UUID societyId) {
          
-        String sql = "SELECT c.* FROM competition c join \"Activities\" a on c.activity_id = a.id where a.society_id = ? "; // Using '?' to safely bind the societyId parameter
+        String sql = "SELECT c.*,a.start_date,a.end_date FROM competition c join \"Activities\" a on c.activity_id = a.id where a.society_id = ? "; // Using '?' to safely bind the societyId parameter
         
         // Execute the query with the societyId parameter and return the list of events
-        return jdbcTemplate.query(sql, new CompetitionRowMapper(),societyId);
+        return jdbcTemplate.queryForList(sql, societyId);
     }
 
+    public Competition getDetails(UUID id)
+    {
+        String sql = "Select * FROM competition where id = ?";
+        return jdbcTemplate.queryForObject(sql, new CompetitionRowMapper(), id);
+    }
 }
