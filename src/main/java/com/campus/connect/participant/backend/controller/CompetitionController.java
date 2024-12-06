@@ -21,6 +21,10 @@ public class CompetitionController {
     @Autowired 
     private CompetitionRepository competitionRepository;
 
+    @GetMapping("/featuredCompetitions")
+    public List<Competition> getfeaturedCompetitions() {
+        return competitionRepository.findAll();
+    }
     
      @GetMapping("/getCompetitionBySocietyId")
     public List<Map<String, Object>> getCompetitionsBySociety(@RequestParam UUID societyId) {

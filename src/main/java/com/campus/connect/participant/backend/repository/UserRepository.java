@@ -1,7 +1,6 @@
 package com.campus.connect.participant.backend.repository;
 
 import com.campus.connect.participant.backend.model.User;
-//import org.springframework.data.repository.CrudRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -26,21 +25,22 @@ public class UserRepository {
             user.setId(UUID.fromString(rs.getString("id")));
             user.setEmail(rs.getString("email"));
             user.setPassword(rs.getString("password"));
-            user.setOAuth(rs.getString("oauth"));
-            user.setAccessToken(rs.getString("access_token"));
-            user.setRefreshToken(rs.getString("refresh_token"));
-            user.setProfilePicture(rs.getString("profilepic"));
+            user.setOauth(rs.getString("oauth"));  // Update field
+            user.setAccessToken(rs.getString("access_token"));  // Update field
+            user.setRefreshToken(rs.getString("refresh_token"));  // Update field
+            user.setProfilePic(rs.getString("profilepic"));  // Update field
             user.setRole(rs.getString("role"));
             return user;
         }
     };
 
+    // Create a new user
     public User createUser(User user) {
         user.setId(UUID.randomUUID());
         String sql = "INSERT INTO \"user\" (id, email, password, oauth, access_token, refresh_token, profilepic, role) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, user.getId(), user.getEmail(), user.getPassword(), user.getOAuth(),
-                user.getAccessToken(), user.getRefreshToken(), user.getProfilePicture(), user.getRole());
+        jdbcTemplate.update(sql, user.getId(), user.getEmail(), user.getPassword(), user.getOauth(),
+                user.getAccessToken(), user.getRefreshToken(), user.getProfilePic(), user.getRole());
         return user;
     }
 
@@ -57,12 +57,12 @@ public class UserRepository {
         return jdbcTemplate.query(sql, rowMapper);
     }
 
-    // Update a user
+    // Update a user by ID
     public int updateUser(UUID id, User user) {
         String sql = "UPDATE \"user\" SET email = ?, password = ?, oauth = ?, access_token = ?, " +
                 "refresh_token = ?, profilepic = ?, role = ? WHERE id = ?";
-        return jdbcTemplate.update(sql, user.getEmail(), user.getPassword(), user.getOAuth(),
-                user.getAccessToken(), user.getRefreshToken(), user.getProfilePicture(), user.getRole(), id);
+        return jdbcTemplate.update(sql, user.getEmail(), user.getPassword(), user.getOauth(),
+                user.getAccessToken(), user.getRefreshToken(), user.getProfilePic(), user.getRole(), id);
     }
 
     // Delete a user by ID
@@ -71,11 +71,10 @@ public class UserRepository {
         return jdbcTemplate.update(sql, id);
     }
 
-    // find by email
+    // Find a user by email
     public Optional<User> findByEmail(String email) {
         String sql = "SELECT * FROM \"user\" WHERE email = ?";
         List<User> users = jdbcTemplate.query(sql, rowMapper, email);
-        System.out.println(users);
         return users.stream().findFirst();
     }
 }
