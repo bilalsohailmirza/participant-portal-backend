@@ -2,8 +2,11 @@ package com.campus.connect.participant.backend.controller;
 
 import com.campus.connect.participant.backend.model.User;
 import com.campus.connect.participant.backend.repository.UserRepository;
+import com.campus.connect.participant.backend.repository.UserRepository;
 import com.campus.connect.participant.backend.payload.request.SignupRequest;
 import com.campus.connect.participant.backend.payload.request.LoginRequest;
+import com.campus.connect.participant.backend.payload.request.ParticipantRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -165,6 +168,34 @@ public class UserController {
         }
     }
     
+    @PostMapping("/participants")
+    public ResponseEntity<?> createParticipant(@RequestBody ParticipantRequest participantRequest) {
+        try {
+            // Call createParticipation to handle the participant creation logic
+            String result = userRepository.createParticipation(
+                participantRequest.getFullName(),
+                participantRequest.getPhone(),
+                participantRequest.isStudent(),
+                participantRequest.getOrganization(),
+                participantRequest.getActivityId()
+            );
 
+            if (result.contains("Successfully")) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(
+                    Map.of("message", result)
+                );
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    Map.of("message", result)
+                );
+            }
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                Map.of("error", "Failed to create participant", "details", ex.getMessage())
+            );
+        }
+    }
+
+    
 
 }

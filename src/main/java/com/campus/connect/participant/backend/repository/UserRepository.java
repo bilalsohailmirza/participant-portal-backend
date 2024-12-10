@@ -1,11 +1,16 @@
 package com.campus.connect.participant.backend.repository;
 
+import com.campus.connect.participant.backend.model.Participant;
 import com.campus.connect.participant.backend.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
-
+import com.campus.connect.participant.backend.security.services.CustomUserDetails;
+import com.campus.connect.participant.backend.repository.ParticipantRepository;
+import java.net.Authenticator;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -17,6 +22,8 @@ public class UserRepository {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired ParticipantRepository participantRepository;
 
     private final RowMapper<User> rowMapper = new RowMapper<User>() {
         @Override
@@ -76,5 +83,51 @@ public class UserRepository {
         String sql = "SELECT * FROM \"user\" WHERE email = ?";
         List<User> users = jdbcTemplate.query(sql, rowMapper, email);
         return users.stream().findFirst();
+    }
+
+    public String createParticipation(String full_name, String phone, Boolean Student, String organization, UUID activity_id){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "Unauthenticated user"; // Handle unauthenticated requests
+        }
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String userEmail = userDetails.getUsername();
+
+        Optional<User> optionalUser = findByEmail(userEmail);
+        if (optionalUser.isEmpty()) {
+            return "User not found";
+        }
+    
+        // Retrieve the actual User object
+        User loggedUser = optionalUser.get();
+    
+        // Extract the user's ID
+        UUID user_id = loggedUser.getId();
+        // UUID user_id = UUID.randomUUID();
+        UUID participantId = UUID.randomUUID();
+        System.out.println(participantId);
+        Participant participant = new Participant();
+
+        participant.setEmail(userEmail);
+        participant.setFullName(full_name);
+        participant.setId(participantId);
+        participant.setOrganization(organization);
+        participant.setPhone(phone);
+        participant.setStudent(Student);
+        participant.setUserId(user_id);
+        
+        boolean var = participantRepository.createOneParticipant(participant);
+        System.out.println(activity_id);
+        participantRepository.associateWithActivity(participantId, activity_id);
+
+        if(var)
+        {
+            return "Participant Created Successfully";
+        }
+        else
+        {
+            return "Unsuccessful";
+        }
+
     }
 }

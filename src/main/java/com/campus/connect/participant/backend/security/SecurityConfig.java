@@ -60,8 +60,9 @@ public class SecurityConfig {
             .requestMatchers("/api/events/getEventBySocietyId").permitAll()
             .requestMatchers("/api/competition/getCompetitionBySocietyId").permitAll()
             .requestMatchers("/api/competition/featuredCompetitions").permitAll()
-            .requestMatchers("/api/competition/getDetails").permitAll()
-            .requestMatchers("/api/events/getDetails").permitAll()
+            .requestMatchers("/api/events/getEvent").permitAll()
+            .requestMatchers("/api/users/createParticipant").permitAll()
+            .requestMatchers("/api/competition/getCompetition").permitAll()
             .anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider()); 

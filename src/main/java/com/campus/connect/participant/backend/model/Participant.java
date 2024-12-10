@@ -7,40 +7,74 @@ import java.util.UUID;
 public class Participant {
 
     @Id
-    private UUID id;
+    private UUID id; // Maps to the 'id' column in the DB
 
-    private UUID user_id;
+    private UUID userId; // Maps to the 'user_id' column in the DB
 
-    private String name;
+    private String fullName; // Maps to the 'full_name' column in the DB
 
-    public UUID getId()
-    {
-        return this.id;
+    private String email; // Maps to the 'email' column in the DB
+
+    private String phone; // Maps to the 'phone' column in the DB
+
+    private boolean student; // Maps to the 'student' column in the DB
+
+    private String organization; // Maps to the 'organization' column in the DB
+
+    // Getters and Setters
+    public UUID getId() {
+        return id;
     }
 
-    public UUID getUserId()
-    {
-        return this.user_id;
-    }
-
-    public String getName()
-    {
-        return this.name;
-    }
-
-    public void setId(UUID id)
-    {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public void setName(String name)
-    {
-        this.name = name;
+    public UUID getUserId() {
+        return userId;
     }
 
-    public void setUserId(UUID user_id)
-    {
-        this.user_id = user_id;
+    public void setUserId(UUID userId) {
+        this.userId = userId;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public boolean isStudent() {
+        return student;
+    }
+
+    public void setStudent(boolean student) {
+        this.student = student;
+    }
+
+    public String getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(String organization) {
+        this.organization = organization;
+    }
 }
