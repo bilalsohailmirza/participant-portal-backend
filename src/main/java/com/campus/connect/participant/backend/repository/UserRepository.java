@@ -2,7 +2,10 @@ package com.campus.connect.participant.backend.repository;
 
 import com.campus.connect.participant.backend.model.Participant;
 import com.campus.connect.participant.backend.model.User;
+import com.campus.connect.participant.backend.payload.response.CompetitionResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -11,8 +14,10 @@ import org.springframework.stereotype.Repository;
 import com.campus.connect.participant.backend.security.services.CustomUserDetails;
 import com.campus.connect.participant.backend.repository.ParticipantRepository;
 import java.net.Authenticator;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -158,5 +163,69 @@ public class UserRepository {
             return "Unsuccessful";
         }
 
+    }
+
+   public ResponseEntity<List<CompetitionResponse>> getCompetitions() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new SecurityException("Unauthenticated user"); // Handle unauthenticated requests
+        }
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String userEmail = userDetails.getUsername();
+
+        Optional<User> optionalUser = findByEmail(userEmail);
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(404).body(null);  // Return 404 if user not found
+        }
+
+        User loggedUser = optionalUser.get();
+        UUID userId = loggedUser.getId();
+
+        String sql = """
+                SELECT 
+                    c.id AS competition_id, 
+                    c.name AS competition_name, 
+                    c.description AS competition_description, 
+                    c.date AS competition_date, 
+                    c.time AS competition_time, 
+                    c.rule_book AS competition_rule_book, 
+                    a.id AS activity_id, 
+                    a.name AS activity_name 
+                FROM 
+                    competition c 
+                INNER JOIN 
+                    "Activities" a ON a.id = c.activity_id 
+                INNER JOIN 
+                    "participant_Activities" p ON c.activity_id = p.activity_id 
+                INNER JOIN 
+                    participant pp ON pp.id = p.participant_id 
+                WHERE 
+                    pp.user_id = ?
+            """;
+
+        // Execute the query and map the result to CompetitionResponse
+        List<CompetitionResponse> competitions = jdbcTemplate.query(
+            connection -> {
+                PreparedStatement ps = connection.prepareStatement(sql);
+                ps.setObject(1, userId);  // Set the user ID parameter
+                return ps;
+            },
+            (rs, rowNum) -> {
+                CompetitionResponse response = new CompetitionResponse();
+                response.setCompetitionId(rs.getString("competition_id"));
+                response.setCompetitionName(rs.getString("competition_name"));
+                response.setCompetitionDescription(rs.getString("competition_description"));
+                response.setCompetitionDate(rs.getDate("competition_date"));
+                response.setCompetitionTime(rs.getTime("competition_time"));
+                response.setCompetitionRuleBook(rs.getString("competition_rule_book"));
+                response.setActivityId(rs.getString("activity_id"));
+                response.setActivityName(rs.getString("activity_name"));
+                return response;
+            }
+        );
+
+        // Return the list of competitions with a 200 OK status
+        return ResponseEntity.ok(competitions);
     }
 }

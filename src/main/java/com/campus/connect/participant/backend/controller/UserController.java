@@ -26,7 +26,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import com.campus.connect.participant.backend.security.jwt.JwtUtils;
+import com.campus.connect.participant.backend.payload.response.CompetitionResponse;
 import com.campus.connect.participant.backend.payload.response.JwtResponse;
+
 
 
 
@@ -204,6 +206,11 @@ public ResponseEntity<Participant> getPersonalData() {
 
     // Return the participant object in the HTTP response
     return ResponseEntity.ok(participant);
+}
+
+@GetMapping("/getCompetitions")
+public ResponseEntity<List<CompetitionResponse>> getCompetitions() {
+    return userRepository.getCompetitions();
 }
     
     
