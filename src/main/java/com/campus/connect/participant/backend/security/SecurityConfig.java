@@ -62,7 +62,8 @@ public class SecurityConfig {
             .requestMatchers("/api/competition/featuredCompetitions").permitAll()
             .requestMatchers("/api/competition/getDetails").permitAll()
             .requestMatchers("/api/events/getDetails").permitAll()
-            .anyRequest().authenticated());
+            .requestMatchers("/api/organizer/featuredOrganizers").permitAll()
+            .anyRequest().authenticated()); 
 
         http.authenticationProvider(authenticationProvider()); 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
