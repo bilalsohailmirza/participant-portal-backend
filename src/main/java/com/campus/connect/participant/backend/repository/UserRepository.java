@@ -3,6 +3,7 @@ package com.campus.connect.participant.backend.repository;
 import com.campus.connect.participant.backend.model.Participant;
 import com.campus.connect.participant.backend.model.User;
 import com.campus.connect.participant.backend.payload.response.CompetitionResponse;
+import com.campus.connect.participant.backend.payload.response.EventResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -151,7 +152,8 @@ public class UserRepository {
         participant.setUserId(user_id);
         
         boolean var = participantRepository.createOneParticipant(participant);
-        System.out.println(activity_id);
+        System.out.println("activity_id");
+        System.out.println(activity_id); 
         participantRepository.associateWithActivity(participantId, activity_id);
 
         if(var)
@@ -228,4 +230,83 @@ public class UserRepository {
         // Return the list of competitions with a 200 OK status
         return ResponseEntity.ok(competitions);
     }
+
+
+    public ResponseEntity<List<EventResponse>> getEvents() {
+    // Check for authentication
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication == null || !authentication.isAuthenticated()) {
+        throw new SecurityException("Unauthenticated user"); // Handle unauthenticated requests
+    }
+
+    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+    String userEmail = userDetails.getUsername();
+
+    // Find the user by email
+    Optional<User> optionalUser = findByEmail(userEmail);
+    if (optionalUser.isEmpty()) {
+        return ResponseEntity.status(404).body(null);  // Return 404 if user not found
+    }
+
+    User loggedUser = optionalUser.get();
+    UUID userId = loggedUser.getId();
+
+    // SQL query to fetch events with all columns
+    String sql = """
+            SELECT 
+                e.id AS event_id, 
+                e.name AS event_name, 
+                e.description AS event_description, 
+                e.about AS event_about, 
+                e.image AS event_image,
+                e.fee AS event_fee, 
+                e.logo AS event_logo, 
+                e.cover AS event_cover, 
+                e.date AS event_date, 
+                e.time AS event_time, 
+                e.society_id AS event_society_id, 
+                e.activity_id AS event_activity_id, 
+                a.name AS activity_name
+            FROM 
+                event e 
+            INNER JOIN 
+                "Activities" a ON a.id = e.activity_id
+            INNER JOIN 
+                "participant_Activities" p ON e.activity_id = p.activity_id
+            INNER JOIN 
+                participant pp ON pp.id = p.participant_id
+            WHERE 
+                pp.user_id = ?
+        """;
+
+    // Execute the query and map the result to EventResponse
+    List<EventResponse> events = jdbcTemplate.query(
+        connection -> {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setObject(1, userId);  // Set the user ID parameter
+            return ps;
+        },
+        (rs, rowNum) -> {
+            EventResponse response = new EventResponse();
+            response.setEventId(rs.getString("event_id"));
+            response.setEventName(rs.getString("event_name"));
+            response.setEventDescription(rs.getString("event_description"));
+            response.setEventAbout(rs.getString("event_about"));
+            response.setEventImage(rs.getString("event_image"));
+            response.setEventFee(rs.getInt("event_fee"));
+            response.setEventLogo(rs.getString("event_logo"));
+            response.setEventCover(rs.getString("event_cover"));
+            response.setEventDate(rs.getDate("event_date"));
+            response.setEventTime(rs.getTime("event_time"));
+            response.setEventSocietyId(rs.getString("event_society_id"));
+            response.setEventActivityId(rs.getString("event_activity_id"));
+            response.setActivityName(rs.getString("activity_name"));
+            return response;
+        }
+    );
+
+    // Return the list of events with a 200 OK status
+    return ResponseEntity.ok(events);
+}
+
 }

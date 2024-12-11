@@ -27,6 +27,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import com.campus.connect.participant.backend.security.jwt.JwtUtils;
 import com.campus.connect.participant.backend.payload.response.CompetitionResponse;
+import com.campus.connect.participant.backend.payload.response.EventResponse;
 import com.campus.connect.participant.backend.payload.response.JwtResponse;
 
 
@@ -211,6 +212,11 @@ public ResponseEntity<Participant> getPersonalData() {
 @GetMapping("/getCompetitions")
 public ResponseEntity<List<CompetitionResponse>> getCompetitions() {
     return userRepository.getCompetitions();
+}
+
+@GetMapping("/getEvents")
+public ResponseEntity<List<EventResponse>> getEvents() {
+    return userRepository.getEvents();
 }
     
     
