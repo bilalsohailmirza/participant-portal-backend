@@ -85,6 +85,35 @@ public class UserRepository {
         return users.stream().findFirst();
     }
 
+    public Participant getUserDetails()
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new SecurityException("Unauthenticated user"); // Handle unauthenticated requests
+        }
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String userEmail = userDetails.getUsername();
+
+        Optional<User> optionalUser = findByEmail(userEmail);
+        if (optionalUser.isEmpty()) {
+            throw new IllegalStateException("User not found");
+        }
+    
+        // Retrieve the actual User object
+        User loggedUser = optionalUser.get();
+        System.out.println(loggedUser);
+        // Extract the user's ID
+        UUID user_id = loggedUser.getId();
+
+        System.out.println(user_id);
+        
+        Optional<Participant> participant = participantRepository.getParticipantByUserId(user_id);
+
+        return participant.orElseGet(() -> new Participant());
+
+    }
+
+
     public String createParticipation(String full_name, String phone, Boolean Student, String organization, UUID activity_id){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()) {

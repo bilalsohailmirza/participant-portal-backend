@@ -1,5 +1,6 @@
 package com.campus.connect.participant.backend.controller;
 
+import com.campus.connect.participant.backend.model.Participant;
 import com.campus.connect.participant.backend.model.User;
 import com.campus.connect.participant.backend.repository.UserRepository;
 import com.campus.connect.participant.backend.repository.UserRepository;
@@ -26,6 +27,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import com.campus.connect.participant.backend.security.jwt.JwtUtils;
 import com.campus.connect.participant.backend.payload.response.JwtResponse;
+
 
 
 
@@ -196,6 +198,14 @@ public class UserController {
         }
     }
 
+@GetMapping("/getPersonalData")
+public ResponseEntity<Participant> getPersonalData() {
+    Participant participant = userRepository.getUserDetails();
+
+    // Return the participant object in the HTTP response
+    return ResponseEntity.ok(participant);
+}
+    
     
 
 }

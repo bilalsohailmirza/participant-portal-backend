@@ -88,5 +88,12 @@ public class ParticipantRepository {
         String sql = "INSERT INTO \"participant_Activities\" (participant_id, activity_id) VALUES (?, ?)";
         return jdbcTemplate.update(sql, participantId, activityId);
     }
-}
+
+    public Optional<Participant> getParticipantByUserId(UUID user_id)
+    {
+        String sql = "Select * from \"participant\" where user_id = ?";
+        List<Participant> users = jdbcTemplate.query(sql, participantRowMapper, user_id);
+        return users.stream().findFirst();
+    }
+}   
  
