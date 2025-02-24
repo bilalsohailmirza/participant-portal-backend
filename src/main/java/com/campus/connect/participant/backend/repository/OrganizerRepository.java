@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
+import java.time.LocalDate;
 @Repository
 public class OrganizerRepository {
     
@@ -67,4 +67,17 @@ public class OrganizerRepository {
         }
     }
 
+    public Organizer createOrganizer(Organizer organizer)
+    {
+        organizer.setId(UUID.randomUUID());
+        String sql = "INSERT INTO organizer (id, user_Id, role, created_at, updated_at)" + "VALUES (?,?,?,?,?)";
+
+        jdbcTemplate.update(sql, organizer.getId(), organizer.getUserId(), organizer.getRole(),LocalDate.now(),LocalDate.now());
+        return organizer;
+    }
+    public Organizer getOrganizerByUserId(UUID userId){
+        String sql = "SELECT * FROM organizer WHERE user_id = ? LIMIT 1";
+        Organizer organizer = jdbcTemplate.queryForObject(sql, rowMapper, userId);
+        return organizer;
+    }
 }

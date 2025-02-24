@@ -43,4 +43,10 @@ public class SocietyRepository {
         List<Society> societies = jdbcTemplate.query(sql, rowMapper, id);
         return societies.isEmpty() ? null : societies.get(0);  // Safely return the first result, or null if not found
     }
+    public Society getSocietyByName(String name)
+    {
+        String sql = "SELECT * FROM \"society\" WHERE name = ?";
+        List<Society> societies = jdbcTemplate.query(sql, rowMapper, name);
+        return societies.isEmpty() ? null : societies.get(0);  // Safely return the first result, or null if not found
+    }
 }

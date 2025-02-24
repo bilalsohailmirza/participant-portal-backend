@@ -3,7 +3,9 @@ package com.campus.connect.participant.backend.payload.request;
 public class SignupRequest {
     private String email;
     private String password;
-
+    private String role;
+    private String organizer_role;
+    private String society_name;
     // Getters and setters
 
     public String getEmail() {
@@ -20,5 +22,32 @@ public class SignupRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRole()
+    {
+        return role;
+    }
+    public void setRole(String role)
+    {
+        this.role = role;
+    }
+
+    public String getOrganizer_role()
+    {
+        return organizer_role;
+    }
+    public void setOrganizer_role(String organizer_role)
+    {
+        this.organizer_role = organizer_role;
+    }
+    public void setSociety_name(String society_name)
+    {
+        this.society_name = society_name;
+    }
+    public String getSociety_name()
+    {   
+        System.out.println("Society Name: "+society_name);
+        return society_name;
     }
 }

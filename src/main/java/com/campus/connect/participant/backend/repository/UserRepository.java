@@ -1,5 +1,6 @@
 package com.campus.connect.participant.backend.repository;
 
+import com.campus.connect.participant.backend.model.Organizer;
 import com.campus.connect.participant.backend.model.Participant;
 import com.campus.connect.participant.backend.model.User;
 import com.campus.connect.participant.backend.payload.response.CompetitionResponse;
