@@ -61,6 +61,12 @@ public class TaskRepository {
         return jdbcTemplate.query(sql, new TaskRowMapper(), userId);
     }
 
+
+    public List<Task> getTasksAssignedByUserId(UUID userId) {
+        String sql = "SELECT * FROM task WHERE assignedto = ?";
+        return jdbcTemplate.query(sql, new TaskRowMapper(), userId);
+    }
+
     // Mark a task as completed
     public int markTaskAsComplete(UUID taskId) {
         String sql = "UPDATE task SET taskstatus = 'COMPLETED' WHERE taskid = ?";

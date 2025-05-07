@@ -46,15 +46,29 @@ public class TaskController {
         }
     }
 
-    // GET /api/tasks/user/{userId} - Get tasks created by a user
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Task>> getTasksByUser(@PathVariable UUID userId) {
-        List<Task> tasks = taskRepository.getTasksByUserId(userId);
+    // GET /api/tasks/ - Get tasks created by a user
+    @GetMapping("/createdTasks")
+    public ResponseEntity<List<Task>> getTasksByUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName(); // or extract from authentication.getPrincipal() if needed
+        UUID createdBy = organizerRepository.getOrganizerIdByEmail(email);
+
+        List<Task> tasks = taskRepository.getTasksByUserId(createdBy);
+        return ResponseEntity.ok(tasks);
+    }
+
+    @GetMapping("/assignedTasks")
+    public ResponseEntity<List<Task>> getTasksAssignedToUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName(); // or extract from authentication.getPrincipal() if needed
+        UUID createdBy = organizerRepository.getOrganizerIdByEmail(email);
+
+        List<Task> tasks = taskRepository.getTasksAssignedByUserId(createdBy);
         return ResponseEntity.ok(tasks);
     }
 
     // PUT /api/tasks/{taskId}/complete - Mark task as complete
-    @PutMapping("/{taskId}/complete")
+    @PutMapping("/complete/{taskId}")
     public ResponseEntity<String> markTaskAsComplete(@PathVariable UUID taskId) {
         int rowsAffected = taskRepository.markTaskAsComplete(taskId);
         if (rowsAffected > 0) {
