@@ -4,6 +4,7 @@ import com.campus.connect.participant.backend.model.Organizer;
 import com.campus.connect.participant.backend.model.Participant;
 import com.campus.connect.participant.backend.model.User;
 import com.campus.connect.participant.backend.repository.OrganizerRepository;
+import com.campus.connect.participant.backend.repository.OrganizerTeamRepository;
 import com.campus.connect.participant.backend.repository.UserRepository;
 import com.campus.connect.participant.backend.repository.UserRepository;
 import com.campus.connect.participant.backend.payload.request.SignupRequest;
@@ -62,6 +63,8 @@ public class UserController {
     @Autowired
     private Society_OrganizerRepository society_organizerRepository;
 
+    @Autowired
+    private OrganizerTeamRepository organizerTeamRepository;
     // Create a new user
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
@@ -123,18 +126,23 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<?> signIn(@RequestBody SignupRequest signupRequest) {
 
+        System.out.println("Signup Request:??????????????????? " + signupRequest);
         Optional<User> response = userRepository.findByEmail(signupRequest.getEmail());
 
         if (response.isPresent()) {
             return ResponseEntity.badRequest().body("Error: Email already exists.");
         } else {
             User user = new User();
+        System.out.println("User: " + user);    
             user.setEmail(signupRequest.getEmail());
             String hashedPassword = new BCryptPasswordEncoder().encode(signupRequest.getPassword());
+
             user.setPassword(hashedPassword);
             user.setRole(signupRequest.getRole());
+            System.out.println("User>>>>>>>>>>>: " + user);    
             userRepository.createUser(user);
-            System.out.println(signupRequest.getRole());
+            System.out.println(signupRequest.getRole() + ">>>>>>>>>>>>>>");
+
             if (signupRequest.getRole().equals("organizer")) {
                 String societyName = signupRequest.getSociety_name();
                 Society society = societyRepository.getSocietyByName(societyName);
@@ -143,6 +151,7 @@ public class UserController {
                 System.out.println("-------------------");
                 System.out.println(society);
                 if (society == null) {
+                    
                     return ResponseEntity.badRequest().body("Error: Society does not exist.");
                 }
 
@@ -153,6 +162,8 @@ public class UserController {
                 Organizer newOrganizer = organizerRepository.createOrganizer(organizer);
 
                 society_organizerRepository.InsertSocietyOrganizer(newOrganizer.getId(), society.getId());
+                organizerTeamRepository.InsertOrganizerTeam(signupRequest.getTeam_name(), newOrganizer.getId(), society.getId());
+                
                 System.out.println(organizer);
                 return ResponseEntity.status(HttpStatus.CREATED).body(
                         Map.of(

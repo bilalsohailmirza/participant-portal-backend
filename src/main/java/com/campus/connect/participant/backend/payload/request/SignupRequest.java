@@ -6,6 +6,7 @@ public class SignupRequest {
     private String role;
     private String organizer_role;
     private String society_name;
+    private String team_name;
     // Getters and setters
 
     public String getEmail() {
@@ -49,5 +50,13 @@ public class SignupRequest {
     {   
         System.out.println("Society Name: "+society_name);
         return society_name;
+    }
+    public void setTeam_name(String team_name)
+    {
+        this.team_name = team_name;
+    }
+    public String getTeam_name()
+    {   
+        return team_name;
     }
 }

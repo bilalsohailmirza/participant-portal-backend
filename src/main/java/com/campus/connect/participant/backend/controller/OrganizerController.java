@@ -6,13 +6,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.campus.connect.participant.backend.model.Organizer;
+import com.campus.connect.participant.backend.model.Society;
 import com.campus.connect.participant.backend.payload.response.OrganizerUserDTO;
 import com.campus.connect.participant.backend.repository.OrganizerRepository;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import java.util.UUID;
 @RestController
 @RequestMapping("/api/organizer")
 public class OrganizerController {
@@ -25,6 +26,12 @@ public class OrganizerController {
 
         return organizerRepository.findByRoleExcomOrPresident();
        
+    }
+
+    @GetMapping("/getOrganizerBySocietyId")
+    public List<Organizer> getOrganizerBySocietyId(@RequestParam UUID societyId) {
+
+        return organizerRepository.getOrganizerBySocietyId(societyId);
     }
     
 

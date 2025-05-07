@@ -80,4 +80,16 @@ public class OrganizerRepository {
         Organizer organizer = jdbcTemplate.queryForObject(sql, rowMapper, userId);
         return organizer;
     }
+
+    public List<Organizer> getOrganizerBySocietyId(UUID societyId)
+    {
+        String sql = "select * from organizer o join organizer_society s on o.id = s.organizer_id where society_id = ?";
+        List<Organizer> organizer = jdbcTemplate.query(sql, rowMapper, societyId);
+        return organizer;
+    }
+
+    public UUID getOrganizerIdByEmail(String email) {
+        String sql = "SELECT o.id FROM organizer o JOIN \"user\" u ON u.id = o.user_id WHERE u.email = ?";
+        return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> UUID.fromString(rs.getString("id")), email);
+    }
 }
