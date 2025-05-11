@@ -7,6 +7,7 @@ public class SignupRequest {
     private String organizer_role;
     private String society_name;
     private String team_name;
+    private String full_name;
     // Getters and setters
 
     public String getEmail() {
@@ -58,5 +59,15 @@ public class SignupRequest {
     public String getTeam_name()
     {   
         return team_name;
+    }
+
+    public String getFull_name()
+    {
+        return full_name;
+    }
+
+    public void setFull_name(String full_name)
+    {
+        this.full_name = full_name;
     }
 }

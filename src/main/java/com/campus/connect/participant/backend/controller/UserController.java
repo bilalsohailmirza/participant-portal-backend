@@ -159,6 +159,7 @@ public class UserController {
                 Organizer organizer = new Organizer();
                 organizer.setRole(signupRequest.getOrganizer_role());
                 organizer.setUserId(user.getId());
+                organizer.setFullName(signupRequest.getFull_name());
                 Organizer newOrganizer = organizerRepository.createOrganizer(organizer);
 
                 society_organizerRepository.InsertSocietyOrganizer(newOrganizer.getId(), society.getId());
@@ -169,6 +170,7 @@ public class UserController {
                         Map.of(
                                 "message", "organizer successfully registered.",
                                 "user", organizer));
+                                
             }
             // return ResponseEntity.ok().body(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(

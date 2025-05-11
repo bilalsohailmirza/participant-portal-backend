@@ -19,6 +19,8 @@ public class Organizer {
 
     private String role;
 
+    private String full_name;
+
     public UUID getId() {
         return this.id;
     }
@@ -57,5 +59,12 @@ public class Organizer {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getFullName() {
+        return this.full_name;
+    }
+    public void setFullName(String full_name) {
+        this.full_name = full_name;
     }
 }

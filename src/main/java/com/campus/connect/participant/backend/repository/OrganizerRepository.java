@@ -30,7 +30,9 @@ public class OrganizerRepository {
             organizer.setCreatedAt(rs.getObject("created_at", java.time.OffsetDateTime.class));
             organizer.setUpdatedAt(rs.getObject("updated_at", java.time.OffsetDateTime.class));
             organizer.setRole(rs.getString("role"));
+            organizer.setFullName(rs.getString("full_name"));
             return organizer;
+
         }
     };
 
@@ -70,9 +72,9 @@ public class OrganizerRepository {
     public Organizer createOrganizer(Organizer organizer)
     {
         organizer.setId(UUID.randomUUID());
-        String sql = "INSERT INTO organizer (id, user_Id, role, created_at, updated_at)" + "VALUES (?,?,?,?,?)";
+        String sql = "INSERT INTO organizer (id, user_Id, role, created_at, updated_at, full_name)" + "VALUES (?,?,?,?,?,?)";
 
-        jdbcTemplate.update(sql, organizer.getId(), organizer.getUserId(), organizer.getRole(),LocalDate.now(),LocalDate.now());
+        jdbcTemplate.update(sql, organizer.getId(), organizer.getUserId(), organizer.getRole(),LocalDate.now(),LocalDate.now(),organizer.getFullName());
         return organizer;
     }
     public Organizer getOrganizerByUserId(UUID userId){
