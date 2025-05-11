@@ -35,6 +35,7 @@ import com.campus.connect.participant.backend.payload.response.JwtResponse;
 import com.campus.connect.participant.backend.repository.SocietyRepository;
 import java.time.LocalDate;
 import com.campus.connect.participant.backend.model.Organizer_society;
+import com.campus.connect.participant.backend.model.Organizer_society;
 import com.campus.connect.participant.backend.model.Society;
 import com.campus.connect.participant.backend.repository.Society_OrganizerRepository;
 
@@ -199,6 +200,23 @@ public class UserController {
                     .collect(Collectors.toList());
 
             // if (roles.contains("participant")) {
+
+                if(roles.contains("organizer"))
+                {   
+                    Organizer organizer = organizerRepository.getOrganizerByUserId(user.get().getId());
+
+                    Organizer_society society_organizer_details = society_organizerRepository.getSocietyByOrganizerId(organizer.getId());
+                    Society society = societyRepository.getSocietyById(society_organizer_details.getSocietyId());
+                    return ResponseEntity.ok().body(
+                            Map.of(
+                                    "message", "User successfully logged in.",
+                                    "user", user,
+                                    "organizer", organizer,
+                                    "society", society,
+                                    "token", jwt)
+                    );
+                }
+
                 return ResponseEntity.ok(new JwtResponse(jwt,
                         userDetails.getUsername(),
                         roles));

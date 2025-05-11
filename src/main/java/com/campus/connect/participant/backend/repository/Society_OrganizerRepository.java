@@ -32,6 +32,11 @@ public class Society_OrganizerRepository {
         String sql = "INSERT INTO organizer_society (organizer_id, society_id) VALUES (?, ?)";
         jdbcTemplate.update(sql, organizer_id, society_id);
     }
+
+public Organizer_society getSocietyByOrganizerId(UUID organizer_id) {
+    String sql = "SELECT * FROM organizer_society WHERE organizer_id = ? LIMIT 1";
+    return jdbcTemplate.queryForObject(sql, rowMapper, organizer_id);
+}
     
 
 }

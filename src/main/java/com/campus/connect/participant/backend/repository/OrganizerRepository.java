@@ -94,4 +94,9 @@ public class OrganizerRepository {
         String sql = "SELECT o.id FROM organizer o JOIN \"user\" u ON u.id = o.user_id WHERE u.email = ?";
         return jdbcTemplate.queryForObject(sql, (rs, rowNum) -> UUID.fromString(rs.getString("id")), email);
     }
+
+    public Organizer getOrganizerById(UUID id) {
+        String sql = "SELECT * FROM organizer WHERE user_id = ?";
+        return jdbcTemplate.queryForObject(sql, rowMapper, id);
+    }
 }
