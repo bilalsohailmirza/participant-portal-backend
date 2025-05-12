@@ -9,6 +9,7 @@ import com.campus.connect.participant.backend.model.Task;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import com.campus.connect.participant.backend.repository.OrganizerRepository;
+import com.campus.connect.participant.backend.payload.request.TaskWithTeamDTO;
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -94,6 +95,15 @@ public class TaskController {
         } else {
             return ResponseEntity.status(404).body("Task not found");
         }
+    }
+
+    // Get all tasks by society id
+    @GetMapping("/society")
+    public ResponseEntity<List<TaskWithTeamDTO>> getAllTasksBySocietyId(@RequestParam UUID societyId) {
+        System.out.println("Society ID: " + societyId); // Debugging line
+ 
+       List<TaskWithTeamDTO> tasks = taskRepository.getAllTasksBySocietyId(societyId);
+        return ResponseEntity.ok(tasks);
     }
 
 }
