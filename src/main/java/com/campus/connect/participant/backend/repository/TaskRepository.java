@@ -14,12 +14,24 @@ import java.util.Date;
 import com.campus.connect.participant.backend.model.Task;
 import com.campus.connect.participant.backend.payload.request.TaskWithTeamDTO;
 import com.campus.connect.participant.backend.payload.request.countTaskByTeam;
+import com.campus.connect.participant.backend.payload.request.countTaskBySociety;
 
 @Repository
 public class TaskRepository {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+
+    private static  class TaskCountBySocietyRowMapper implements RowMapper<countTaskBySociety> {
+        @Override
+        public countTaskBySociety mapRow(ResultSet rs, int rowNum) throws SQLException {
+            countTaskBySociety taskCount = new countTaskBySociety();
+            taskCount.setSociety_id(rs.getInt("society_id"));
+            taskCount.setCount(rs.getInt("count"));
+            taskCount.setName(rs.getString("name"));
+            return taskCount;
+        }
+    }
 
     private static class TaskCountRowMapper implements RowMapper<countTaskByTeam>{
         @Override
@@ -130,5 +142,11 @@ public class TaskRepository {
         {
             String sql = "select team_id,count(*) as count, t2.name from task t1 inner join team t2 on t1.team_id = t2.id group by(team_id,t2.name)";
             return jdbcTemplate.query(sql, new TaskCountRowMapper());
+        }
+
+        public List<countTaskBySociety> getTaskCountBySociety()
+        {
+            String sql = "select society_id,count(*) as count, s1.name from task t1 inner join society s1 on t1.society_id = s1.id group by(society_id,s1.name)";
+            return jdbcTemplate.query(sql, new TaskCountBySocietyRowMapper());
         }
 }

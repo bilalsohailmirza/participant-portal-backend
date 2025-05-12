@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import com.campus.connect.participant.backend.repository.OrganizerRepository;
 import com.campus.connect.participant.backend.payload.request.TaskWithTeamDTO;
 import com.campus.connect.participant.backend.payload.request.countTaskByTeam;
+import com.campus.connect.participant.backend.payload.request.countTaskBySociety;
 
 
 @RestController
@@ -111,6 +112,12 @@ public class TaskController {
     @GetMapping("/taskCountByTeam")
     public ResponseEntity<List<countTaskByTeam>> getTaskCountByTeam() {
         List<countTaskByTeam> tasks = taskRepository.getTaskCountByTeam();
+        return ResponseEntity.ok(tasks);
+    }
+
+    @GetMapping("/taskCountBySociety")
+    public ResponseEntity<List<countTaskBySociety>> getTaskCountBySociety() {
+        List<countTaskBySociety> tasks = taskRepository.getTaskCountBySociety();
         return ResponseEntity.ok(tasks);
     }
 }
