@@ -35,6 +35,7 @@ import com.campus.connect.participant.backend.payload.response.JwtResponse;
 import com.campus.connect.participant.backend.repository.SocietyRepository;
 import java.time.LocalDate;
 import com.campus.connect.participant.backend.model.Organizer_society;
+import com.campus.connect.participant.backend.model.Organizer_team;
 import com.campus.connect.participant.backend.model.Organizer_society;
 import com.campus.connect.participant.backend.model.Society;
 import com.campus.connect.participant.backend.repository.Society_OrganizerRepository;
@@ -207,12 +208,19 @@ public class UserController {
 
                     Organizer_society society_organizer_details = society_organizerRepository.getSocietyByOrganizerId(organizer.getId());
                     Society society = societyRepository.getSocietyById(society_organizer_details.getSocietyId());
+                    
+                    Organizer_team org = organizerTeamRepository.getOrganizerTeamByOrganizerId(organizer.getId());
+                    
+                    //translate this in java
+                    System.out.println("Organizer: " + org);
+                    
                     return ResponseEntity.ok().body(
                             Map.of(
                                     "message", "User successfully logged in.",
                                     "user", user,
                                     "organizer", organizer,
                                     "society", society,
+                                    "team", org,
                                     "token", jwt)
                     );
                 }
