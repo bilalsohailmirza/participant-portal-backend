@@ -13,13 +13,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Date;
 import com.campus.connect.participant.backend.model.Task;
 import com.campus.connect.participant.backend.payload.request.TaskWithTeamDTO;
+import com.campus.connect.participant.backend.payload.request.countTaskByTeam;
+
 @Repository
 public class TaskRepository {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
 
-    // RowMapper as inner class
+    private static class TaskCountRowMapper implements RowMapper<countTaskByTeam>{
+        @Override
+        public countTaskByTeam mapRow(ResultSet rs, int rowNum) throws SQLException {
+            countTaskByTeam taskCount = new countTaskByTeam();
+            taskCount.setTeamId(UUID.fromString(rs.getString("team_id")));
+            taskCount.setTaskCount(rs.getInt("count"));
+            taskCount.setTeamName(rs.getString("name"));
+            return taskCount;
+        }
+    }
+
     private static class TaskRowMapper implements RowMapper<Task> {
         @Override
         public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -112,5 +124,11 @@ public class TaskRepository {
             String sql = "SELECT t1.taskid, t1.taskname, t1.taskdescription, t1.taskstatus,t1.createdby, t1.assignedto, t1.deadline, t1.team_id, t1.society_id, t2.name AS team_name FROM task t1 JOIN team t2 ON t1.team_id = t2.id WHERE t1.society_id = ?";
             
             return jdbcTemplate.query(sql, new TaskWithTeamDTORowMapper(), societyId);
+        }
+
+        public List<countTaskByTeam> getTaskCountByTeam()
+        {
+            String sql = "select team_id,count(*) as count, t2.name from task t1 inner join team t2 on t1.team_id = t2.id group by(team_id,t2.name)";
+            return jdbcTemplate.query(sql, new TaskCountRowMapper());
         }
 }
