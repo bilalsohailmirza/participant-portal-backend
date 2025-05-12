@@ -77,5 +77,24 @@ public class TaskController {
             return ResponseEntity.status(404).body("Task not found");
         }
     }
+
+    // PUT /api/tasks/{taskId}/status - Update task status
+    @PutMapping("/updateStatus")
+    public ResponseEntity<String> updateTaskStatus(@RequestParam UUID taskId, @RequestParam String status) {
+
+        System.out.println("Task ID: " + taskId); 
+        System.out.println("Status: " + status); 
+
+        if (!status.equals("COMPLETED") && !status.equals("PENDING") && !status.equals("IN-PROGRESS")) {
+            return ResponseEntity.badRequest().body("Invalid status: Status shall only be COMPLETED, IN-PROGRESS or PENDING");
+        }
+        int rowsAffected = taskRepository.updateTaskStatus(taskId, status);
+        if (rowsAffected > 0) {
+            return ResponseEntity.ok("Task status updated successfully");
+        } else {
+            return ResponseEntity.status(404).body("Task not found");
+        }
+    }
+
 }
 

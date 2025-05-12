@@ -55,4 +55,8 @@ public class OrganizerTeamRepository {
         return organizerTeam;
     }
     
+    public Organizer_team getOrganizerTeamByOrganizerId(UUID organizerId) {
+        String sql = "SELECT * FROM organizer_team WHERE organizer_id = ?";
+        return jdbcTemplate.queryForObject(sql, organizerTeamRowMapper, organizerId);
+    }
 }

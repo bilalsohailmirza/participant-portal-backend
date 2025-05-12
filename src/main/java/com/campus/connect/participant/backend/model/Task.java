@@ -11,6 +11,8 @@ public class Task {
     private UUID createdBy;
     private UUID assignedTo;
     private Date deadline;
+    private UUID teamId;      // Added for team_id column
+    private UUID societyId; 
 
     // Getters and setters
 
@@ -69,4 +71,21 @@ public class Task {
     public void setDeadline(Date deadline) {
         this.deadline = deadline;
     }
+    
+    public UUID getTeamId() {
+        return teamId;
+    }
+
+    public void setTeamId(UUID teamId) {
+        this.teamId = teamId;
+    }
+
+    public UUID getSocietyId() {
+        return societyId;
+    }
+
+    public void setSocietyId(UUID societyId) {
+        this.societyId = societyId;
+    }
+
 }

@@ -29,11 +29,14 @@ public class TaskRepository {
             task.setTaskDescription(rs.getString("taskdescription"));
             task.setTaskStatus(rs.getString("taskstatus"));
             task.setCreatedBy(UUID.fromString(rs.getString("createdby")));
+            
 
             String assignedToStr = rs.getString("assignedto");
             task.setAssignedTo(assignedToStr != null ? UUID.fromString(assignedToStr) : null);
 
             task.setDeadline(rs.getDate("deadline"));
+            task.setTeamId(rs.getString("team_id") != null ? UUID.fromString(rs.getString("team_id")) : null);
+            task.setSocietyId(rs.getString("society_id") != null ? UUID.fromString(rs.getString("society_id")) : null);
             return task;
         }
     }
@@ -41,8 +44,8 @@ public class TaskRepository {
     // Create a new task
     public int createTask(Task task) {
         String sql = """
-            INSERT INTO task (taskid, taskname, taskdescription, taskstatus, createdby, assignedto, deadline)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO task (taskid, taskname, taskdescription, taskstatus, createdby, assignedto, deadline, team_id, society_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?,?,?)
         """;
         return jdbcTemplate.update(sql,
             task.getTaskId(),
@@ -51,7 +54,9 @@ public class TaskRepository {
             task.getTaskStatus(),
             task.getCreatedBy(),
             task.getAssignedTo(),
-            task.getDeadline()
+            task.getDeadline(),
+            task.getTeamId(),
+            task.getSocietyId()
         );
     }
 
@@ -71,5 +76,11 @@ public class TaskRepository {
     public int markTaskAsComplete(UUID taskId) {
         String sql = "UPDATE task SET taskstatus = 'COMPLETED' WHERE taskid = ?";
         return jdbcTemplate.update(sql, taskId);
+    }
+
+    //add a function to update the status of task
+    public int updateTaskStatus(UUID taskId, String status) {
+        String sql = "UPDATE task SET taskstatus = ? WHERE taskid = ?";
+        return jdbcTemplate.update(sql, status, taskId);
     }
 }
