@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,11 @@ import java.util.UUID;
 import com.campus.connect.participant.backend.model.Transaction;
 import com.campus.connect.participant.backend.repository.TransactionRepository;
 import com.campus.connect.participant.backend.repository.SocietyRepository;
+import com.campus.connect.participant.backend.payload.response.CompetitionResponse;
+import com.campus.connect.participant.backend.payload.response.ExpensePerMonth;
+
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -103,5 +109,37 @@ public class TransactionController {
         response.put("total " + transactionType, amount);
     return response;
     }
+
+    @GetMapping("/getExpensePerMonth")
+    public ResponseEntity<List<ExpensePerMonth>> getExpensePerMonth(@RequestParam UUID societyId) {
+
+        List<Transaction> transactions =  transactionRepository.getTransactionsBySocietyIdAndType(societyId,"expense");
+
+        List<ExpensePerMonth> expenseList = new ArrayList<>();
+
+        for(int i = 1; i <= 12; i++)
+        {
+            ExpensePerMonth temp = new ExpensePerMonth();
+            temp.setTotal(BigDecimal.ZERO);
+            temp.setName(i);
+
+            expenseList.add(temp);
+        }
+
+        for(Transaction i : transactions)
+        {
+            BigDecimal amount = i.getAmount();
+            int date = i.getDate().getMonthValue()-1;
+
+            ExpensePerMonth temp = expenseList.get(date);
+            temp.setTotal(temp.getTotal().add(amount));
+
+            expenseList.set(date,temp);
+        }
+
+        return ResponseEntity.ok(expenseList);
+
+    }
+    
     
 }
