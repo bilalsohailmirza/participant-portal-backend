@@ -50,5 +50,22 @@ public class SocietyRepository {
         return societies.isEmpty() ? null : societies.get(0);  // Safely return the first result, or null if not found
     }
 
+    // a function to add amount to society column total_budget
+    public void addBudgetToSociety(UUID societyId, double amount) {
+        String sql = "UPDATE \"society\" SET total_budget = total_budget + ? WHERE id = ?";
+        jdbcTemplate.update(sql, amount, societyId);
+    }
+
+    // a function to subtract amount from society column total_budget
+    public void subtractBudgetFromSociety(UUID societyId, double amount) {
+        String sql = "UPDATE \"society\" SET total_budget = total_budget - ? WHERE id = ?";
+        jdbcTemplate.update(sql, amount, societyId);
+    }
+    // a function to get the total budget of a society
+    public double getTotalBudgetOfSociety(UUID societyId) {
+        String sql = "SELECT total_budget FROM \"society\" WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, Double.class, societyId);
+    }
+
     
 }
