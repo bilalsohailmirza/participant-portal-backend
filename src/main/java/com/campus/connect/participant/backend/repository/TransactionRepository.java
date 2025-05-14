@@ -54,6 +54,23 @@ public List<Transaction> getTransactionsBySocietyIdAndType(UUID societyId, Strin
     return jdbcTemplate.query(sql, new TransactionRowMapper(), societyId, transactionType);
 }
 
+// get total expense of a society
+public int getTotalExpenseBySocietyId(UUID societyId) {
+    String sql = "SELECT SUM(amount) FROM \"transaction\" WHERE society_id = ? AND transaction_type = 'expense'";
+    Integer result = jdbcTemplate.queryForObject(sql, Integer.class, societyId);
+    return result != null ? result : 0;
+}
+
+// get total income of a society
+public int getTotalIncomeBySocietyId(UUID societyId) {
+    String sql = "SELECT SUM(amount) FROM \"transaction\" WHERE society_id = ? AND transaction_type = 'income'";
+    Integer result = jdbcTemplate.queryForObject(sql, Integer.class, societyId);
+    return result != null ? result : 0;
+}
+
+
+
+
 
 
 }

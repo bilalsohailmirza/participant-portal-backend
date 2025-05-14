@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import com.campus.connect.participant.backend.model.Transaction;
@@ -82,6 +84,24 @@ public class TransactionController {
 
         List<Transaction> transactions = transactionRepository.getTransactionsBySocietyIdAndType(societyId, transactionType);
         return ResponseEntity.ok(transactions);
+    }
+
+    @GetMapping("getTotalTransaction/{societyId}/{transactionType}")
+    public Map<String, Object> getTotalTransaction(@PathVariable UUID societyId, @PathVariable String transactionType)    
+    {   
+        int amount;
+
+        if(transactionType.equals("expense"))
+        {
+            amount = transactionRepository.getTotalExpenseBySocietyId(societyId);
+        }
+        else
+        {   
+            amount = transactionRepository.getTotalIncomeBySocietyId(societyId) + 10000;
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("total " + transactionType, amount);
+    return response;
     }
     
 }
