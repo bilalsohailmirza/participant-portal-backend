@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,4 +32,11 @@ public class SocietyController {
         return societyRepository.getSocietyById(societyId);
     }
     
+    @GetMapping("/get-total-budget")
+    public Map<String,Object> getTotalBudget(@RequestParam UUID societyId) {
+        double budget = societyRepository.getTotalBudgetOfSociety(societyId);
+            Map<String, Object> response = new HashMap<>();
+            response.put("totalBudget", budget);
+    return response;
+    }
 }
