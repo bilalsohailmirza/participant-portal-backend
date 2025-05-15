@@ -1,0 +1,18 @@
+home
+/featured-societies (Get)
+/featured-events (Get)
+
+society
+/featured-members (Get)
+/events-by-societies (Get)
+/competitions-by-societies (Get)
+
+competition
+/competition-details (Get) have to return a join of activity and competition
+/form
+
+events
+/events-details (Get)
+/form
+
+need to add activity id in participant table as well

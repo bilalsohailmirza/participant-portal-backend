@@ -7,80 +7,78 @@ import java.util.UUID;
 
 @Table("user")
 public class User {
-        @Id
-        private UUID id;
-        private String email;
-        private String password;
-        private String oAuth;
-        private String accessToken;
-        private String refreshToken;
-        private String profilePicture;
-        private String role;
+    @Id
+    private UUID id;
+    private String email;
+    private String password;
+    private String oauth;  // Updated field to match "oauth" in the table
+    private String accessToken;  // Updated field to match "access_token" in the table
+    private String refreshToken;  // Updated field to match "refresh_token" in the table
+    private String profilePic;  // Updated field to match "profilepic" in the table
+    private String role;
 
+    // Getters and setters
+    public UUID getId() {
+        return id;
+    }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
-        // Getters and setters
-        public UUID getId() {
-                return id;
-        }
+    public String getEmail() {
+        return email;
+    }
 
-        public void setId(UUID id) {
-                this.id = id;
-        }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-        public String getAccessToken() {
-                return accessToken;
-        }
+    public String getPassword() {
+        return password;
+    }
 
-        public void setAccessToken(String accessToken) {
-                this.accessToken = accessToken;
-        }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-        public String getRefreshToken() {
-                return refreshToken;
-        }
+    public String getOauth() {
+        return oauth;
+    }
 
-        public void setRefreshToken(String refreshToken) {
-                this.refreshToken = refreshToken;
-        }
+    public void setOauth(String oauth) {
+        this.oauth = oauth;
+    }
 
-        public String getProfilePicture() {
-                return profilePicture;
-        }
+    public String getAccessToken() {
+        return accessToken;
+    }
 
-        public void setProfilePicture(String profilePicture) {
-                this.profilePicture = profilePicture;
-        }
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
 
-        public String getRole() {
-                return role;
-        }
+    public String getRefreshToken() {
+        return refreshToken;
+    }
 
-        public void setRole(String role) {
-                this.role = role;
-        }
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 
-        public String getEmail() {
-                return email;
-        }
+    public String getProfilePic() {
+        return profilePic;
+    }
 
-        public void setEmail(String email) {
-                this.email = email;
-        }
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
 
-        public String getOAuth() {
-                return oAuth;
-        }
+    public String getRole() {
+        return role;
+    }
 
-        public void setOAuth(String oAuth) {
-                this.oAuth = oAuth;
-        }
-
-        public String getPassword() {
-                return password;
-        }
-
-        public void setPassword(String password) {
-                this.password = password;
-        }
+    public void setRole(String role) {
+        this.role = role;
+    }
 }
